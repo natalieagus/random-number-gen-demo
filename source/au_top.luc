@@ -47,10 +47,9 @@ module au_top (
     io_seg = ~seg.seg; // connect segments to the driver
     io_sel = ~seg.sel; // connect digit select to the driver
     
-    
     slowclock_edge.in = slowclock.value[27]; // store the edge 
     io_led[2][7] = slowclock.value[27]; // view the slowclock signal 
-    random_number_generator.next = b1; // always high
+    random_number_generator.next = b1; // always high, will produce one value every FPGA clock cycle 
     random_number_generator.seed = 32hABC; // now hardcoded value 
 
     
@@ -58,6 +57,7 @@ module au_top (
     second_random_number_generator.seed = c{24hABCDEF, io_dip[2]};
     
     if (io_dip[0][0]){
+        // this is going to flicker so fast you won't be able to see it
         io_led[1:0] = {random_number_generator.num[15:8], random_number_generator.num[7:0]};
         seg.values = {random_number_generator.num[15:12],random_number_generator.num[11:8], random_number_generator.num[7:4], random_number_generator.num[3:0]};
     }
